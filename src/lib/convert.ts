@@ -1,13 +1,24 @@
 const TIMESTAMP_RE =
-  /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?/g;
+  /\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}(?::?\d{2})?)?/g;
 
 export function extractTimestamps(text: string): string[] {
   return text.match(TIMESTAMP_RE) ?? [];
 }
 
+export function toIsoUtc(value: string): string {
+  let iso = value.trim().replace(" ", "T");
+
+  if (/Z$/.test(iso)) return iso;
+  if (/[+-]\d{2}:\d{2}$/.test(iso)) return iso;
+  if (/[+-]\d{4}$/.test(iso)) {
+    return `${iso.slice(0, -2)}:${iso.slice(-2)}`;
+  }
+  if (/[+-]\d{2}$/.test(iso)) return `${iso}:00`;
+  return `${iso}Z`;
+}
+
 export function parseAsGmt(value: string): Date | null {
-  const hasOffset = /Z|[+-]\d{2}:?\d{2}$/.test(value);
-  const date = new Date(hasOffset ? value : `${value}Z`);
+  const date = new Date(toIsoUtc(value));
   return Number.isNaN(date.getTime()) ? null : date;
 }
 

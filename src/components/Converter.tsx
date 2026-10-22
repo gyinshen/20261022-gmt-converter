@@ -11,6 +11,7 @@ import {
 } from "@/lib/convert";
 
 const EXAMPLE = "2026-10-21T15:59:59";
+const EXAMPLE_SQL = "2026-10-13 08:26:24.370651+00";
 
 export function Converter() {
   const [input, setInput] = useState("");
@@ -41,14 +42,15 @@ export function Converter() {
           id="gmt-input"
           value={input}
           onChange={(event) => setInput(event.target.value)}
-          placeholder={`Paste a GMT timestamp, e.g. ${EXAMPLE}`}
+          placeholder={`Paste a GMT timestamp, e.g. ${EXAMPLE} or ${EXAMPLE_SQL}`}
           rows={4}
           className="w-full resize-y rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 font-mono text-sm outline-none ring-emerald-500/30 transition focus:border-emerald-500 focus:ring-4 dark:border-zinc-700 dark:bg-zinc-950"
         />
         <p className="mt-1.5 text-xs text-zinc-500">
-          Naive ISO times are treated as GMT+0. Offsets like <code>Z</code> or{" "}
-          <code>+08:00</code> are respected. Multiple timestamps in one paste are
-          converted.
+          Naive ISO times are treated as GMT+0. Also accepts SQL/Postgres style
+          like <code>{EXAMPLE_SQL}</code>. Offsets (<code>Z</code>,{" "}
+          <code>+00</code>, <code>+08:00</code>) are respected. Multiple
+          timestamps in one paste are converted.
         </p>
       </div>
 
@@ -58,7 +60,7 @@ export function Converter() {
         </p>
         {results.length === 0 ? (
           <p className="mt-2 text-lg text-zinc-400">
-            Paste a time like {EXAMPLE}
+            Paste a time like {EXAMPLE} or {EXAMPLE_SQL}
           </p>
         ) : (
           <ul className="mt-3 space-y-3">
