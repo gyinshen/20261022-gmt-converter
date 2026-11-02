@@ -1,21 +1,35 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { CITIES, filterCities, type City } from "@/lib/cities";
+import { CITIES, type City } from "@/lib/cities";
+import { gmtOffset } from "@/lib/convert";
+
+const FALLBACK_INSTANT = new Date("2026-01-15T12:00:00.000Z");
 
 type Props = {
   value: City;
   onChange: (city: City) => void;
+  at?: Date;
 };
 
-export function CityCombobox({ value, onChange }: Props) {
+export function CityCombobox({ value, onChange, at }: Props) {
   const listId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const options = useMemo(() => filterCities(query), [query]);
+  const instant = at ?? FALLBACK_INSTANT;
+  const options = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return CITIES.filter((city) => {
+      if (!q) return true;
+      const offset = gmtOffset(instant, city.timeZone).toLowerCase();
+      return [city.name, city.country, city.timeZone, offset].some((value) =>
+        value.toLowerCase().includes(q),
+      );
+    });
+  }, [query, instant]);
 
   useEffect(() => {
     setActiveIndex(0);
@@ -69,7 +83,11 @@ export function CityCombobox({ value, onChange }: Props) {
         aria-autocomplete="list"
         autoComplete="off"
         placeholder="Type a city…"
-        value={open || query ? query : `${value.name} · ${value.country}`}
+        value={
+          open || query
+            ? query
+            : `${value.name} · ${gmtOffset(instant, value.timeZone)}`
+        }
         onChange={(event) => {
           setQuery(event.target.value);
           setOpen(true);
@@ -112,8 +130,8 @@ export function CityCombobox({ value, onChange }: Props) {
                     {city.name}
                     <span className="ml-2 text-zinc-500">{city.country}</span>
                   </span>
-                  <span className="font-mono text-xs text-zinc-400">
-                    {city.timeZone}
+                  <span className="font-mono text-xs text-zinc-500">
+                    {gmtOffset(instant, city.timeZone)}
                   </span>
                 </button>
               </li>

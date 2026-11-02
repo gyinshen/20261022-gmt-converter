@@ -45,26 +45,26 @@ export function DurationCalc() {
           <label htmlFor="start-time" className="mb-1.5 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
             Start
           </label>
-          <textarea
+          <input
             id="start-time"
+            type="text"
             value={startInput}
             onChange={(event) => setStartInput(event.target.value)}
             placeholder={EXAMPLE_A}
-            rows={3}
-            className="w-full resize-y rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 font-mono text-sm outline-none ring-emerald-500/30 transition focus:border-emerald-500 focus:ring-4 dark:border-zinc-700 dark:bg-zinc-950"
+            className="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 font-mono text-sm outline-none ring-emerald-500/30 transition focus:border-emerald-500 focus:ring-4 dark:border-zinc-700 dark:bg-zinc-950"
           />
         </div>
         <div>
           <label htmlFor="end-time" className="mb-1.5 block text-sm font-medium text-zinc-600 dark:text-zinc-400">
             End
           </label>
-          <textarea
+          <input
             id="end-time"
+            type="text"
             value={endInput}
             onChange={(event) => setEndInput(event.target.value)}
             placeholder={EXAMPLE_B}
-            rows={3}
-            className="w-full resize-y rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 font-mono text-sm outline-none ring-emerald-500/30 transition focus:border-emerald-500 focus:ring-4 dark:border-zinc-700 dark:bg-zinc-950"
+            className="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 font-mono text-sm outline-none ring-emerald-500/30 transition focus:border-emerald-500 focus:ring-4 dark:border-zinc-700 dark:bg-zinc-950"
           />
         </div>
       </div>

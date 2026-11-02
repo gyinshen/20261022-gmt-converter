@@ -25,6 +25,7 @@ export function Converter() {
       return [
         {
           stamp,
+          date,
           formatted: formatInTimeZone(date, city.timeZone),
           offset: offsetLabel(date, city.timeZone),
         },
@@ -78,7 +79,11 @@ export function Converter() {
         )}
       </div>
 
-      <CityCombobox value={city} onChange={setCity} />
+      <CityCombobox
+        value={city}
+        onChange={setCity}
+        at={results[0]?.date}
+      />
     </div>
   );
 }

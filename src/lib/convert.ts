@@ -46,6 +46,17 @@ export function offsetLabel(date: Date, timeZone: string): string {
   return parts.find((part) => part.type === "timeZoneName")?.value ?? timeZone;
 }
 
+/** Compact offset like GMT+1, GMT+8, GMT+5:30. */
+export function gmtOffset(date: Date, timeZone: string): string {
+  const raw = offsetLabel(date, timeZone).replace(/^UTC/, "GMT").replace(/\s+/g, "");
+  const match = raw.match(/^GMT([+-])(\d{1,2})(?::?(\d{2}))?$/i);
+  if (!match) return raw === "GMT" ? "GMT+0" : raw;
+  const hours = Number(match[2]);
+  const minutes = match[3] ? Number(match[3]) : 0;
+  if (minutes === 0) return `GMT${match[1]}${hours}`;
+  return `GMT${match[1]}${hours}:${String(minutes).padStart(2, "0")}`;
+}
+
 export type DurationParts = {
   days: number;
   hours: number;
