@@ -45,3 +45,24 @@ export function offsetLabel(date: Date, timeZone: string): string {
   }).formatToParts(date);
   return parts.find((part) => part.type === "timeZoneName")?.value ?? timeZone;
 }
+
+export type DurationParts = {
+  days: number;
+  hours: number;
+  minutes: number;
+  inverted: boolean;
+};
+
+export function formatDuration(parts: DurationParts): string {
+  return `${parts.days}d ${parts.hours}h ${parts.minutes}m`;
+}
+
+export function diffDuration(from: Date, to: Date): DurationParts {
+  const inverted = to.getTime() < from.getTime();
+  const ms = Math.abs(to.getTime() - from.getTime());
+  const totalMinutes = Math.floor(ms / 60_000);
+  const days = Math.floor(totalMinutes / (24 * 60));
+  const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
+  const minutes = totalMinutes % 60;
+  return { days, hours, minutes, inverted };
+}
